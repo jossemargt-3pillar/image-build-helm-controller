@@ -58,7 +58,7 @@ steps:
     - tag
 
 services:
-- name: dockersocket
+- name: docker
   image: docker:dind
   privileged: true
   volumes:
