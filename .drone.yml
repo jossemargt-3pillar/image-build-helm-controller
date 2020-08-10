@@ -9,7 +9,7 @@ steps:
 - name: build
   image: rancher/build-base:v1.14.2-amd64
   volumes:
-  - name: dockersocket
+  - name: dockersock
     path: /var/run
   commands:
   - sleep 20
@@ -21,7 +21,7 @@ steps:
 - name: push
   image: rancher/build-base:v1.14.2-amd64
   volumes:
-  - name: dockersocket
+  - name: dockersock
     path: /var/run
   commands:
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -38,7 +38,7 @@ steps:
 - name: scan
   image: rancher/build-base:v1.14.2-amd64
   volumes:
-  - name: dockersocket
+  - name: dockersock
     path: /var/run
   commands:
   - TAG=${DRONE_TAG} make image-scan
@@ -49,7 +49,7 @@ steps:
 - name: manifest
   image: rancher/build-base:v1.14.2-amd64
   volumes:
-  - name: dockersocket
+  - name: dockersock
     path: /var/run
   commands:
   - TAG=${DRONE_TAG} make image-manifest
