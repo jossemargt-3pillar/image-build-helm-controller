@@ -1,4 +1,4 @@
-# ranchertest/helm-controller
+# rancher/helm-controller
 
 ## Build
 
