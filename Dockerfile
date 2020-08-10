@@ -10,11 +10,11 @@ RUN apt update     && \
     apt install -y ca-certificates git
 
 RUN git clone --depth=1 https://github.com/rancher/helm-controller.git
-RUN cd /go/helm-controller                                                                          && \
-    git fetch --all --tags --prune                                                                  && \
-    git checkout tags/${TAG} -b ${TAG}                                                              && \
-    mkdir bin                                                                                       && \
-    [ "$(uname)" != "Darwin" ] && LINKFLAGS="-extldflags -static -s"                                && \
+RUN cd /go/helm-controller                                           && \
+    git fetch --all --tags --prune                                   && \
+    git checkout tags/${TAG} -b ${TAG}                               && \
+    mkdir bin                                                        && \
+    [ "$(uname)" != "Darwin" ] && LINKFLAGS="-extldflags -static -s" && \
     CGO_ENABLED=1 go build -v -ldflags "-X main.VERSION=$VERSION $LINKFLAGS" -o bin/helm-controller
 
 FROM ubi
