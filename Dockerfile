@@ -1,13 +1,11 @@
-ARG UBI_IMAGE=registry.access.redhat.com/ubi7/ubi-minimal:latest
-ARG GO_IMAGE=rancher/build-base:v1.14.2
+ARG BCI_IMAGE=registry.suse.com/bci/bci-base:latest
+ARG GO_IMAGE=rancher/hardened-build-base:v1.16.12b7
 
-FROM ${UBI_IMAGE} as ubi
+FROM ${BCI_IMAGE} as bci
 
 FROM ${GO_IMAGE} as builder
 ARG TAG="" 
-RUN apt update     && \ 
-    apt upgrade -y && \ 
-    apt install -y ca-certificates git
+RUN apk add --no-cache ca-certificates git
 
 RUN git clone --depth=1 https://github.com/rancher/helm-controller.git
 RUN cd /go/helm-controller                                           && \
@@ -17,9 +15,9 @@ RUN cd /go/helm-controller                                           && \
     [ "$(uname)" != "Darwin" ] && LINKFLAGS="-extldflags -static -s" && \
     CGO_ENABLED=1 go build -v -ldflags "-X main.VERSION=$VERSION $LINKFLAGS" -o bin/helm-controller
 
-FROM ubi
-RUN microdnf update -y && \ 
-    rm -rf /var/cache/yum
+FROM bci
+RUN zypper update -y && \ 
+    zypper clean --all
 
 COPY --from=builder /go/helm-controller/bin /usr/local/bin
 
